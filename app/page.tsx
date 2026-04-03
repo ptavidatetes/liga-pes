@@ -202,7 +202,6 @@ export default function Home() {
     await supabase.from("budgets").upsert([{ team: selectedTeam, money: parseInt(newBudget) }]);
     setNewBudget(""); fetchBudgets(); showMessage("Presupuesto actualizado 💰");
   };
-
     if (!user) {
     return (
       <div style={{ all: "unset" }}>
@@ -324,136 +323,180 @@ export default function Home() {
 
       <div className="flex-1 overflow-y-auto pb-24 px-5 pt-6 space-y-8">
 
-                        {/* === VER EQUIPO - SELECTOR PARA TODOS === */}
-        {tab === "equipo" && (
-          <div className="space-y-6">
-            {/* Selector de Equipo */}
-            {/* === FORMULARIO CREAR JUGADOR - SIEMPRE VISIBLE === */}
-      <div className="bg-zinc-900 rounded-3xl p-6 border border-white/10 mb-8">
-        <h3 className="font-black text-xl mb-5 flex items-center gap-2">
-          ➕ Añadir Nuevo Jugador a mi equipo
-        </h3>
+                        {/* === PESTAÑA EQUIPO - ESTILO BRUTALISTA (corregido) === */}
+{tab === "equipo" && (
+  <div className="space-y-8">
 
-        <div className="grid grid-cols-1 gap-4 mb-6">
-          <input
-            className="bg-zinc-800 border border-white/10 rounded-2xl px-6 py-5 text-lg placeholder:text-zinc-500"
-            placeholder="Nombre del jugador"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
-          <input
-            className="bg-zinc-800 border border-white/10 rounded-2xl px-6 py-5 text-lg placeholder:text-zinc-500"
-            placeholder="Precio en millones"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            type="number"
-          />
-
-          <select
-            className="bg-zinc-800 border border-white/10 rounded-2xl px-6 py-5 text-lg"
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
-          >
-            <option>Portero</option>
-            <option>Defensa</option>
-            <option>Centrocampista</option>
-            <option>Delantero</option>
-          </select>
-
-          {/* Solo ADMIN puede elegir en qué equipo crear el jugador */}
-          {user.team === "👑 ADMIN" && (
-            <select
-              className="bg-zinc-800 border border-white/10 rounded-2xl px-6 py-5 text-lg"
-              value={adminTeam}
-              onChange={(e) => setAdminTeam(e.target.value)}
-            >
-              {teams.map(t => <option key={t}>{t}</option>)}
-            </select>
-          )}
+    {/* Hero Stats Section - Sin Valor de Mercado */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-surface border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <p className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest mb-1">ESTADO DE LA PLANTILLA</p>
+        <h2 className="text-4xl font-black font-headline text-emerald-400">
+          {myPlayers.length} Jugadores
+        </h2>
+        <div className="w-full h-2 bg-zinc-800 mt-4 border border-black overflow-hidden">
+          <div 
+            className="bg-emerald-500 h-full transition-all" 
+            style={{ width: `${Math.min((myPlayers.length / 22) * 100, 100)}%` }}
+          ></div>
         </div>
+      </div>
 
-        <button
-          onClick={user.team === "👑 ADMIN" ? addPlayerAdmin : addPlayer}
-          className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:brightness-110 py-5 rounded-3xl font-black text-xl active:scale-[0.97] transition-all"
-        >
-          {user.team === "👑 ADMIN" ? "Crear Jugador (Admin)" : "Añadir Jugador a mi equipo"}
+<p></p>
+
+      <div className="bg-secondary-container border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden group">
+        <div className="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform">
+          <span className="material-symbols-outlined text-[120px]">VXD</span>
+        </div>
+        <p className="text-[10px] font-bold uppercase text-white/70 tracking-widest mb-1">FORMACIÓN ACTIVA</p>
+        <h2 className="text-4xl font-black font-headline text-white italic">4-3-3 A</h2>
+        <button className="mt-6 text-[10px] font-black uppercase text-white border-b-2 border-white/40 hover:border-white transition-colors">
+          CAMBIAR TÁCTICA
         </button>
       </div>
-      
-            <div className="bg-zinc-900 rounded-3xl p-6 border border-white/10">
-              <h3 className="font-black text-xl mb-4">Seleccionar Equipo para Ver</h3>
-              <select
-                value={viewTeam}
-                onChange={(e) => setViewTeam(e.target.value)}
-                className="bg-zinc-800 border border-white/10 rounded-3xl px-6 py-5 w-full text-lg font-medium focus:outline-none focus:border-emerald-500"
-              >
-                {teams.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </div>
+    </div>
 
-            {/* Lista de Jugadores del Equipo Seleccionado */}
-            <div className="bg-zinc-900 rounded-3xl p-6 border border-white/10">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-black tracking-tighter flex items-center gap-3">
-                  ⚽ Plantilla de {viewTeam}
-                </h2>
-                <div className="text-sm bg-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-2xl">
-                  {players.filter(p => p.owner === viewTeam).length} jugadores
+<p></p>
+
+    {/* Formulario para crear jugador */}
+    <div className="bg-surface border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <h3 className="font-black text-2xl mb-5 flex items-center gap-3">
+        <span className="material-symbols-outlined"></span>
+        AÑADIR NUEVO JUGADOR
+      </h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <input
+          className="border-2 border-black px-6 py-5 text-lg placeholder:text-[#C9C9C9] focus:outline-none focus:border-emerald-500"
+          placeholder="Nombre del jugador"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+<div><div className="h-px bg-zinc-700 my-4"></div></div>
+        <input
+          className="bg-[#ffff] border-2 border-black px-6 py-5 text-lg placeholder:text-[#C9C9C9] focus:outline-none focus:border-emerald-500"
+          placeholder="Precio (M)"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          type="number"
+        />
+        <div><div className="h-px bg-zinc-700 my-4"></div></div>
+        <select
+          className="bg-white border-2 border-black px-6 py-5 text-lg text-black focus:outline-none focus:border-emerald-500"
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
+        >
+          <option>Portero</option>
+          <option>Defensa</option>
+          <option>Centrocampista</option>
+          <option>Delantero</option>
+        </select>
+      </div>
+
+      <div><div className="h-px bg-zinc-700 my-4"></div></div>
+      {user.team === "👑 ADMIN" && (
+        <select
+          className="w-full bg-white border-2 border-black px-6 py-5 text-lg text-black mb-6 focus:outline-none focus:border-emerald-500"
+          value={adminTeam}
+          onChange={(e) => setAdminTeam(e.target.value)}
+        >
+          {teams.map(t => <option key={t}>{t}</option>)}
+        </select>
+      )}
+
+      <button
+        onClick={user.team === "👑 ADMIN" ? addPlayerAdmin : addPlayer}
+        className="w-full bg-emerald-500 text-black py-5 font-black text-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+      >
+        {user.team === "👑 ADMIN" ? "CREAR JUGADOR (ADMIN)" : "AÑADIR JUGADOR A MI EQUIPO"}
+      </button>
+    </div>
+
+<p></p>
+
+    {/* Selector de Equipo - Fondo blanco */}
+    <div className="bg-surface border-3 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">VER PLANTILLA DE</p>
+      <select
+        value={viewTeam}
+        onChange={(e) => setViewTeam(e.target.value)}
+        className="w-full bg-white border-2 border-black text-black px-6 py-5 text-lg font-medium focus:outline-none focus:border-emerald-500"
+      >
+        {teams.map((t) => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
+    </div>
+
+    {/* Lista de Jugadores */}
+    <div className="grid grid-cols-1 gap-6">
+      {players.filter((p: any) => p.owner === viewTeam).length === 0 ? (
+        <div className="bg-surface border-2 border-black p-16 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-zinc-400">Este equipo aún no tiene jugadores.</p>
+        </div>
+      ) : (
+        players
+          .filter((p: any) => p.owner === viewTeam)
+          .map((p: any) => {
+            const posColor = 
+              p.position === "Portero" ? "bg-yellow-500 text-black" :
+              p.position === "Defensa" ? "bg-blue-600 text-white" :
+              p.position === "Centrocampista" ? "bg-emerald-500 text-black" : "bg-red-500 text-white";
+
+            return (
+              <div 
+                key={p.id} 
+                className="group bg-surface-container border-2 border-black p-6 flex flex-col md:flex-row items-center gap-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-900 transition-colors"
+              >
+                
+                {/* Foto sin balón */}
+                <div className="relative flex-shrink-0">
+                  <div className="w-20 h-20 bg-zinc-800 border-2 border-black rounded-xl overflow-hidden" />
+                  <span className={`${posColor} absolute -bottom-2 -right-2 text-[10px] font-black px-3 py-0.5 border-2 border-black`}>
+                    {p.position?.slice(0, 3).toUpperCase() || "FWD"}
+                  </span>
+                </div>
+
+                {/* Información del jugador */}
+                <div className="flex-grow text-center md:text-left">
+                  <h4 className="text-xl font-black font-headline uppercase leading-none tracking-tight">
+                    {p.name}
+                  </h4>
+                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-1">
+                    {p.position || "Jugador"}
+                  </p>
+                </div>
+
+                {/* Precio y Acciones */}
+                <div className="flex flex-col items-center md:items-end min-w-[160px] gap-4">
+                  <span className="text-emerald-400 font-black font-headline text-2xl">
+                    €{p.price}M
+                  </span>
+
+
+                  {(user.team === viewTeam || user.team === "👑 ADMIN") && (
+                    <button
+                      onClick={() => toggleMarket(p)}
+                      className="bg-zinc-800 text-[10px] font-black uppercase px-6 py-3 border-2 border-black hover:bg-emerald-500 hover:text-black transition-all"
+                    >
+                      {p.on_market ? "QUITAR VENTA" : "PONER EN VENTA"}
+                    </button>
+                  )}
+
+                  {user.team === "👑 ADMIN" && (
+                    <div className="flex gap-2">
+                      <button onClick={() => editPlayer(p)} className="bg-blue-600 px-5 py-2 text-xs font-medium border-2 border-black">EDITAR</button>
+                      <button onClick={() => deletePlayer(p)} className="bg-red-600 px-5 py-2 text-xs font-medium border-2 border-black">ELIMINAR</button>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {players.filter(p => p.owner === viewTeam).length === 0 ? (
-                <p className="text-center text-zinc-500 py-12">Este equipo aún no tiene jugadores.</p>
-              ) : (
-                <div className="space-y-4">
-                  {players
-                    .filter((p: any) => p.owner === viewTeam)
-                    .map((p: any) => {
-                      const posColor = 
-                        p.position === "Portero" ? "bg-blue-600" :
-                        p.position === "Defensa" ? "bg-emerald-600" :
-                        p.position === "Centrocampista" ? "bg-amber-600" : "bg-red-600";
-
-                      return (
-                        <div key={p.id} className="bg-zinc-800 border border-white/10 rounded-2xl p-5 flex items-center justify-between group">
-                          <div className="flex items-center gap-4">
-                            <div className={`${posColor} w-11 h-11 rounded-2xl flex items-center justify-center text-white font-black text-xs`}>
-                              {p.position?.slice(0,3).toUpperCase()}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-lg">{p.name}</p>
-                              <p className="text-sm text-zinc-400">{p.position} • {p.price}M</p>
-                            </div>
-                          </div>
-
-                          <div className="flex gap-2">
-                            {(user.team === viewTeam || user.team === "👑 ADMIN") && (
-                              <button
-                                onClick={() => toggleMarket(p)}
-                                className={`px-5 py-2.5 rounded-2xl text-sm font-semibold ${p.on_market ? "bg-amber-500 text-black" : "bg-zinc-700"}`}
-                              >
-                                {p.on_market ? "Quitar venta" : "Poner en venta"}
-                              </button>
-                            )}
-
-                            {user.team === "👑 ADMIN" && (
-                              <>
-                                <button onClick={() => editPlayer(p)} className="bg-blue-600 px-4 py-2.5 rounded-2xl text-sm">Editar</button>
-                                <button onClick={() => deletePlayer(p)} className="bg-red-600 px-4 py-2.5 rounded-2xl text-sm">Eliminar</button>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+            );
+          })
+      )}
+    </div>
+  </div>
+)}
 
                 {/* === MERCADO === */}
         {tab === "mercado" && (
