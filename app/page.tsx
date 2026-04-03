@@ -305,14 +305,14 @@ export default function Home() {
           <div className="flex items-center gap-x-3">
             <div className="text-4xl">⚽</div>
             <div>
-              <h1 className="text-3xl font-black tracking-tighter">Liga VXD</h1>
-              <p className="text-emerald-200 text-sm font-medium -mt-1">{user.team}</p>
+              <h1 className="text-4xl font-black font-headline text-emerald-400">Liga VXD</h1>
+              <p className="text-4xl font-black font-headline text-emerald-400">{user.team}</p>
             </div>
           </div>
           <div className="flex items-center gap-x-2">
             <div className="bg-black/30 px-5 py-2 rounded-3xl flex items-center gap-2">
-              <span className="text-emerald-300 text-xl">💰</span>
-              <span className="font-black text-3xl">{getBudget(user.team)}M</span>
+              <span className="text-4xl font-black font-headline text-emerald-400">💰</span>
+              <span className="text-4xl font-black font-headline text-emerald-400">{getBudget(user.team)}M</span>
             </div>
             <button onClick={logout} className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-2xl text-sm font-medium transition-all active:scale-95">Salir</button>
           </div>
@@ -334,7 +334,7 @@ export default function Home() {
         <h2 className="text-4xl font-black font-headline text-emerald-400">
           {myPlayers.length} Jugadores
         </h2>
-        <div className="w-full h-2 bg-zinc-800 mt-4 border border-black overflow-hidden">
+        <div className="text-4xl font-black font-headline text-emerald-400">
           <div 
             className="bg-emerald-500 h-full transition-all" 
             style={{ width: `${Math.min((myPlayers.length / 22) * 100, 100)}%` }}
